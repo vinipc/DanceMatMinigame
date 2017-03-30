@@ -23,6 +23,7 @@ public class GameMaster : MonoBehaviour
 
 	public Text scoreDisplay;
 	public Image timerGauge;
+	public GameObject restartMessage;
 	public float maxTime;
 
 	public Color timerFullColor = Color.green; // Timer color when it's full
@@ -42,6 +43,7 @@ public class GameMaster : MonoBehaviour
 
 	private void Awake()
 	{
+		restartMessage.SetActive(false);
 		lastPressedButton = DanceMatButton.None;
 		currentTime = maxTime;
 		currentScore = 0;
@@ -83,6 +85,7 @@ public class GameMaster : MonoBehaviour
 	private void GameOver()
 	{
 		isCounting = false;
+		restartMessage.SetActive(true);
 	}
 
 	private void DecreaseTimer()
