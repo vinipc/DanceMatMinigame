@@ -7,19 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameMaster : MonoBehaviour 
 {
 	public const int SCORE_PER_TAP = 1;
-
-	private enum DanceMatButton 
-	{ 
-		None,
-		UpLeft, 
-		Up, 
-		UpRight, 
-		Right, 
-		DownRight, 
-		Down, 
-		DownLeft, 
-		Left 
-	}
+	public const KeyCode NULL_KEYCODE = KeyCode.F15;
 
 	public Text scoreDisplay;
 	public Image timerGauge;
@@ -31,7 +19,7 @@ public class GameMaster : MonoBehaviour
 
 	private float currentTime;
 
-	private DanceMatButton lastPressedButton = DanceMatButton.None;
+	public KeyCode lastPressedKey;
 
 	private int currentScore = 0;
 	private bool isCounting = true;
@@ -44,7 +32,7 @@ public class GameMaster : MonoBehaviour
 	private void Awake()
 	{
 		restartMessage.SetActive(false);
-		lastPressedButton = DanceMatButton.None;
+		lastPressedKey = NULL_KEYCODE;
 		currentTime = maxTime;
 		currentScore = 0;
 		scoreDisplay.text = currentScore.ToString();
@@ -102,49 +90,45 @@ public class GameMaster : MonoBehaviour
 	private void CheckInput()
 	{
 		// Gets which button was pressed on current frame
-		DanceMatButton pressedButton = GetDanceMatButtonDown();
+		KeyCode pressedButton = GetDanceMatKeyDown();
 
 		// If no button was pressed, do nothing.
-		if (pressedButton == DanceMatButton.None)
+		if (pressedButton == NULL_KEYCODE)
 			return;
 
 		// If the pressed button is different than the last pressed button, 
 		//	increases the score
-		if (pressedButton != lastPressedButton)
+		if (pressedButton != lastPressedKey)
 			AddScore(SCORE_PER_TAP);
 
 		// Saves current button as last pressed button for next frame.
-		lastPressedButton = pressedButton;
+		lastPressedKey = pressedButton;
 	}
 
 	// Returns which mat button was pressed on the current frame.
-	private DanceMatButton GetDanceMatButtonDown()
+	private KeyCode GetDanceMatKeyDown()
 	{
 		if (GetUpButtonDown())
-			return DanceMatButton.Up;
+			return KeyCode.UpArrow;
 
 		if (GetDownButtonDown())
-			return DanceMatButton.Down;
+			return KeyCode.DownArrow;
 
 		if (GetLeftButtonDown())
-			return DanceMatButton.Left;
+			return KeyCode.LeftArrow;
 
 		if (GetRightButtonDown())
-			return DanceMatButton.Right;
+			return KeyCode.RightArrow;
 
-		if (Input.GetKeyDown(KeyCode.Joystick1Button0))
-			return DanceMatButton.DownLeft;
+		foreach(KeyCode vKey in System.Enum.GetValues(typeof(KeyCode)))
+		{
+			if(Input.GetKeyDown(vKey))
+			{
+				return vKey;
+			}
+		}
 
-		if (Input.GetKeyDown(KeyCode.Joystick1Button1))
-			return DanceMatButton.UpRight;
-
-		if (Input.GetKeyDown(KeyCode.Joystick1Button2))
-			return DanceMatButton.UpLeft;
-
-		if (Input.GetKeyDown(KeyCode.Joystick1Button3))
-			return DanceMatButton.DownLeft;
-
-		return DanceMatButton.None;
+		return NULL_KEYCODE;
 	}
 
 	// True if Up button was pressed on current frame
