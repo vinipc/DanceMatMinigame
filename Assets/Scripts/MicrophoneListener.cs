@@ -7,7 +7,7 @@ public class MicrophoneListener : MonoBehaviour
 {
 	
 	private readonly int SAMPLE_COUNT = 1000; 
-	private readonly float THRESHOLD = 5.0f;
+	private readonly float THRESHOLD = 5.7f;
 
 	private float[] _samples;
 	private float _sensitivity;
@@ -20,8 +20,10 @@ public class MicrophoneListener : MonoBehaviour
 	{
 		/*  if(sonarController.IsAllowed)
 		sonarController.InitVoice();*/
-		Instantiate (grapePrefab, new Vector3(Random.Range (spawnAreaLeft.transform.position.x, spawnAreaRight.transform.position.x), 6.08f, 0), Quaternion.identity);
-    }
+		if (GameMaster.isCounting == true) {
+			Instantiate (grapePrefab, new Vector3 (Random.Range (spawnAreaLeft.transform.position.x, spawnAreaRight.transform.position.x), 6.08f, 0), Quaternion.identity);
+		}
+		}
 
 	private float GetAverageVolume()
 	{

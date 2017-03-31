@@ -22,7 +22,7 @@ public class GameMaster : MonoBehaviour
 	public KeyCode lastPressedKey;
 
 	private int currentScore = 0;
-	private bool isCounting = true;
+	public static bool isCounting = true;
 
 	private bool leftButtonDown = false;
 	private bool rightButtonDown = false;
@@ -66,8 +66,18 @@ public class GameMaster : MonoBehaviour
 	// Incresed current score and updates display
 	private void AddScore(int score)
 	{
+		GameObject[] grapesArray = GameObject.FindGameObjectsWithTag ("Grape");
+
+		if (grapesArray.Length < 3)
+			return;
+		
 		currentScore += score;
 		scoreDisplay.text = currentScore.ToString();
+
+		for (int i = 0; i < 3; i++)
+		{
+			Destroy (grapesArray [i]);
+		}
 	}
 
 	private void GameOver()
